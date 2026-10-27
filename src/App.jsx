@@ -555,6 +555,8 @@ function TickerBar({ board = [] }) {
 }
 
 function Header({ authUser }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+
   return (
     <header className="site-header">
       <div className="container nav-bar">
@@ -566,7 +568,7 @@ function Header({ authUser }) {
           </div>
         </div>
 
-        <nav className="main-nav">
+        <nav id="primary-navigation" className={`main-nav ${menuOpen ? 'is-open' : ''}`} onClick={() => setMenuOpen(false)}>
           <NavLink to="/">Home</NavLink>
           <NavLink to="/scores">Scores</NavLink>
           <NavLink to="/predictions">Predictions</NavLink>
@@ -575,6 +577,18 @@ function Header({ authUser }) {
         </nav>
 
         <div className="nav-actions">
+          <button
+            className="menu-toggle"
+            type="button"
+            aria-expanded={menuOpen}
+            aria-controls="primary-navigation"
+            aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
           <button className="btn btn-primary" type="button">Get Picks</button>
         </div>
       </div>
