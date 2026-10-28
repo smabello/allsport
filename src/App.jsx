@@ -589,7 +589,6 @@ function Header({ authUser }) {
             <span />
             <span />
           </button>
-          <button className="btn btn-primary" type="button">Get Picks</button>
         </div>
       </div>
     </header>
