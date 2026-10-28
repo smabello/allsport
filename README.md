@@ -1,16 +1,29 @@
-# React + Vite
+# AllSport
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+AllSport provides live sports scores, AI-generated match outcome estimates, and current sports headlines. It is not a betting or sportsbook app.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- ESPN scoreboards for the NBA, NFL, MLB, and selected soccer leagues, refreshed every 30 seconds.
+- AI predictions for up to eight live or scheduled games, refreshed every five minutes. The model receives only the matchup, game status, current score, start time, and available season records.
+- ESPN sports headlines, refreshed every two minutes. “Trending sports” is based on how often each sport appears in the current headline feed, not audience views or a popularity metric.
+- Editorial tools for staff to manage news stories.
 
-## React Compiler
+AI estimates are not guarantees. They use limited scoreboard data and do not include injury reports or other live context.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Run locally
 
-## Expanding the Oxlint configuration
+Requirements: Node.js and npm.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+1. Install dependencies with `npm install`.
+2. Copy `.env.example` to `.env` and add an OpenAI API key, or complete Azure OpenAI credentials. The key stays on the server and must not be committed.
+3. In one terminal, start the AI API server with `npm run dev:server`.
+4. In another terminal, start the web app with `npm run dev`.
+5. Open `http://localhost:4178`.
+
+Without a configured AI provider, live scores and headlines still work, but the app reports that AI predictions are unavailable instead of substituting a non-AI estimate.
+
+## Build and lint
+
+- `npm run build`
+- `npm run lint`

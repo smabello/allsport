@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, NavLink, Route, Routes, useNavigate } from 'react-router-dom'
 import './App.css'
 
@@ -26,151 +26,7 @@ const adminUsers = [
   { email: 'editor@allsport.com', password: 'editor123', role: 'Editor', name: 'Cal Reed' },
 ]
 
-const promoOffers = [
-  {
-    id: 'promo-1',
-    title: 'Bet $5, Get $150 in Bonus Bets',
-    brand: 'FanDuel',
-    sport: 'NBA',
-    code: 'ALLSPORT150',
-    detail: 'New customers can turn a small first wager into bonus cash across basketball, football, and baseball markets.',
-    expiry: 'Ends in 7 days',
-    tag: 'Top pick',
-  },
-  {
-    id: 'promo-2',
-    title: 'Up to $1,000 First Deposit Match',
-    brand: 'DraftKings',
-    sport: 'NFL',
-    code: 'ALLSPORT1000',
-    detail: 'Get matched bonus funds on your first deposit and unlock boosted odds on primetime matchups.',
-    expiry: 'Ends in 14 days',
-    tag: 'Best value',
-  },
-  {
-    id: 'promo-3',
-    title: 'No Sweat First Bet up to $250',
-    brand: 'Caesars',
-    sport: 'MLB',
-    code: 'ALLSPORT250',
-    detail: 'Place your first wager with confidence thanks to insurance on early losses and daily parlay boosts.',
-    expiry: 'Ends in 5 days',
-    tag: 'Fresh offer',
-  },
-  {
-    id: 'promo-4',
-    title: 'Profit Boost Bundle',
-    brand: 'BetMGM',
-    sport: 'NCAAB',
-    code: 'ALLSPORTBOOST',
-    detail: 'Stack multiple parlay boosts across college basketball and prop markets this week.',
-    expiry: 'Ends in 9 days',
-    tag: 'Boosted',
-  },
-  {
-    id: 'promo-5',
-    title: 'Free Bet for Live Betting',
-    brand: 'PointsBet',
-    sport: 'Soccer',
-    code: 'LIVEEDGE',
-    detail: 'Receive a targeted live-betting bonus for in-play wagers on major games and global matchups.',
-    expiry: 'Ends in 3 days',
-    tag: 'Live play',
-  },
-  {
-    id: 'promo-6',
-    title: 'Exclusive Signup Credit',
-    brand: 'Fanatics',
-    sport: 'NHL',
-    code: 'ALLSPORTCREDIT',
-    detail: 'Tap in on a free welcome offer for sportsbook and casino access with a simple signup flow.',
-    expiry: 'Ends in 11 days',
-    tag: 'New',
-  },
-]
-
-const initialNews = [
-  {
-    id: 'story-1',
-    sport: 'NBA',
-    category: 'Breaking',
-    title: 'Boston’s late-game execution keeps them ahead of the market',
-    summary: 'The Celtics continue to dominate in the most important possessions of the fourth quarter.',
-    author: 'Jordan Hayes',
-    readTime: '6 min read',
-    image: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1200&q=80',
-    status: 'Published',
-    content: [
-      'The Celtics are winning the matchup on the margin that matters most: clutch execution. Boston is converting a higher share of late-game possessions while forcing more rushed decisions on the wing.',
-      'The market still sees the spread as manageable, but the underlying efficiency numbers suggest the edge is tilting toward the stronger side. The team’s ball security and spacing have remained especially steady when the defense tightens.',
-      'That late-game pattern matters in the same way a sharp bettor cares about injury reports, tempo, and travel. The value is not just the number in the box score; it is the rate at which that number is produced under pressure.',
-    ],
-  },
-  {
-    id: 'story-2',
-    sport: 'NFL',
-    category: 'Injury Report',
-    title: 'How injuries and weather are moving totals across the early slate',
-    summary: 'Wind, rest, and workload are changing the market faster than expected this week.',
-    author: 'Alicia Ross',
-    readTime: '4 min read',
-    image: 'https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&w=1200&q=80',
-    status: 'Published',
-    content: [
-      'A cold-weather game with a tighter injury report can quickly move the market harder than a standard Sunday card. The line movement is reflecting more than just the public opinion; it is reflecting changing pace expectations and operational risk.',
-      'This week’s most significant factor is the overlap between short rest and windy conditions. Once the weather forecast shifts, the best value often goes away with it.',
-      'For bettors, the lesson is simple: be patient with totals and monitor decision-making. The early game may be the best place to find a better number before it settles.',
-    ],
-  },
-  {
-    id: 'story-3',
-    sport: 'MLB',
-    category: 'Analysis',
-    title: 'Playoff races tighten as divisional leaders keep pushing',
-    summary: 'Bullpen volatility and contact quality are defining the final stretch of the season.',
-    author: 'Ruben Diaz',
-    readTime: '7 min read',
-    image: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1200&q=80',
-    status: 'Published',
-    content: [
-      'With the playoff race tightening, more teams are leaning harder on their best relievers and their most contact-efficient lineups. The market is now reflecting a much smaller margin for error.',
-      'When bullpen leverage climbs, run totals drop and moneyline value shifts toward the clubs with more depth. That is where sharp bettors tend to move early in the day.',
-      'The key this week is not just the standings. It is the way those standings are being created: by who is forcing contact, who is still getting groundballs, and who is managing fatigue late in games.',
-    ],
-  },
-  {
-    id: 'story-4',
-    sport: 'NBA',
-    category: 'Analysis',
-    title: 'The midseason adjustments that are reshaping playoff odds',
-    summary: 'Teams with better bench units are creating more separation in the final stretch of the season.',
-    author: 'Samir Cole',
-    readTime: '5 min read',
-    image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=1200&q=80',
-    status: 'In Review',
-    content: [
-      'The playoff race is being decided more by sustainability than explosive talent. Clubs that can maintain pace through the bench rotation are the ones making the most efficient late-run adjustments.',
-      'Bench production, particularly on defense, is proving to be a better predictor than headline scoring trends. That may explain why several teams are climbing without a major shift in the public perception.',
-      'Sharp bettors are less interested in the streak and more interested in the underlying structure behind it. That is exactly where the value is being created right now.',
-    ],
-  },
-  {
-    id: 'story-5',
-    sport: 'NFL',
-    category: 'Breaking',
-    title: 'Quarterback availability still defines the market’s early confidence',
-    summary: 'The injury report is setting tone for both spread and total movement across the week.',
-    author: 'Nina Harris',
-    readTime: '3 min read',
-    image: 'https://images.unsplash.com/photo-1518604660418-8823f29f5d2e?auto=format&fit=crop&w=1200&q=80',
-    status: 'Draft',
-    content: [
-      'A single quarterback question can reshape the market in a matter of hours. That pressure spreads into both the spread and the total as bettors reprice the expected point production.',
-      'The most reliable edge comes when the market reacts before the public fully understands the replacement plan. Getting there early often matters more than getting the exact outcome right.',
-      'For now, the data suggests discipline. Monitor the route tree and the expected snap count before making the move.',
-    ],
-  },
-]
+const initialNews = []
 
 const cleanText = (input) => {
   return String(input || '')
@@ -231,52 +87,6 @@ const fetchLiveNews = async (signal) => {
   }
 }
 
-const parseRecord = (value) => {
-  if (!value || value === '—') return 0.5
-  const match = value.match(/(\d+)-(\d+)(?:-(\d+))?/)
-  if (!match) return 0.5
-  const wins = Number(match[1])
-  const losses = Number(match[2])
-  const draws = Number(match[3] || 0)
-  return (wins + draws / 2) / Math.max(1, wins + losses + draws)
-}
-
-const getShortTeamName = (name = '') => name.split(' ').filter(Boolean).slice(-1)[0] || 'Team'
-
-const makePrediction = (item, index) => {
-  const homeWinRate = parseRecord(item.homeRecord)
-  const awayWinRate = parseRecord(item.awayRecord)
-  const liveMargin = item.status === 'Live' ? item.awayScore - item.homeScore : 0
-  const homeEstimate = Math.round(Math.min(75, Math.max(25, 50 + (homeWinRate - awayWinRate) * 35 - liveMargin * 1.5)))
-  const awayName = getShortTeamName(item.awayTeam)
-  const homeName = getShortTeamName(item.homeTeam)
-  const favorite = homeEstimate >= 50 ? homeName : awayName
-  const confidence = Math.max(homeEstimate, 100 - homeEstimate)
-  const score = item.status === 'Live'
-    ? `${item.awayScore}-${item.homeScore}`
-    : item.startTime ? new Date(item.startTime).toLocaleString() : 'Not started'
-  const records = item.homeRecord !== '—' && item.awayRecord !== '—'
-    ? `Season records: ${item.awayTeam} ${item.awayRecord}, ${item.homeTeam} ${item.homeRecord}.`
-    : 'Season records are not available, so this estimate starts from an even matchup.'
-  const liveContext = item.status === 'Live'
-    ? `Live score: ${item.awayTeam} ${item.awayScore}, ${item.homeTeam} ${item.homeScore}.`
-    : 'This is a pre-game estimate and will update with the scoreboard.'
-  const reason = `${records} ${liveContext} The pick is a simple estimate based on the season win rates and current score, not a sportsbook line or a guaranteed outcome.`
-
-  return {
-    id: item.id || `pick-${index}`,
-    sport: item.sport,
-    league: item.league,
-    tag: item.status === 'Live' ? 'Live estimate' : 'Pre-game estimate',
-    title: `${awayName} at ${homeName}`,
-    detail: `Current pick: ${favorite} (${confidence}% estimated win chance). This estimate uses season records${item.status === 'Live' ? ' and the live score' : ''}.`,
-    reason,
-    odds: item.spread || 'Odds unavailable',
-    confidence: `${confidence}% estimated`,
-    projectedScore: score,
-  }
-}
-
 const normalizeEvent = (event, sport, league = '') => {
   const competition = event?.competitions?.[0]
   const competitors = competition?.competitors ?? []
@@ -293,7 +103,6 @@ const normalizeEvent = (event, sport, league = '') => {
 
   const homeScore = Number(home.score ?? 0)
   const awayScore = Number(away.score ?? 0)
-  const odds = competition?.odds?.[0]
 
   return {
     id: event.id || `${sport}-${homeTeam}-${awayTeam}`,
@@ -305,8 +114,6 @@ const normalizeEvent = (event, sport, league = '') => {
     awayTeam,
     homeScore,
     awayScore,
-    spread: odds?.details || '',
-    total: odds?.overUnder ? String(odds.overUnder) : '',
     homeRecord: home.records?.[0]?.summary || '—',
     awayRecord: away.records?.[0]?.summary || '—',
     startTime: event.date || '',
@@ -322,11 +129,53 @@ const fetchScoreboard = async (sport, endpoint, signal, league = '') => {
   return (data.events || []).map((item) => normalizeEvent(item, sport, competitionName)).filter(Boolean)
 }
 
+const requestAiPredictions = async (games) => {
+  const response = await fetch('/api/predictions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ games }),
+  })
+  let result
+  try {
+    result = await response.json()
+  } catch (error) {
+    if (error.name !== 'SyntaxError') throw error
+    throw new Error('The AI prediction server is unavailable. Start it with npm run dev:server.')
+  }
+
+  if (!response.ok) {
+    throw new Error(result.message || 'AI predictions could not be generated.')
+  }
+
+  return result.predictions.map((prediction) => {
+    const game = games.find((item) => item.id === prediction.gameId)
+    if (!game) throw new Error('AI response did not match the current scoreboard.')
+
+    return {
+      id: game.id,
+      sport: game.sport,
+      league: game.league,
+      tag: game.status === 'Live' ? 'Live match' : 'Upcoming match',
+      title: `${game.awayTeam} at ${game.homeTeam}`,
+      predictedWinner: prediction.predictedWinner,
+      winProbability: prediction.winProbability,
+      detail: prediction.reason,
+      score: game.status === 'Live'
+        ? `${game.awayScore} - ${game.homeScore}`
+        : game.startTime ? new Date(game.startTime).toLocaleString() : 'Start time unavailable',
+    }
+  })
+}
+
 function App() {
   const [selectedSport, setSelectedSport] = useState('all')
-  const [selectedMarket, setSelectedMarket] = useState('all')
+  const [selectedGameStatus, setSelectedGameStatus] = useState('all')
   const [search, setSearch] = useState('')
   const [board, setBoard] = useState([])
+  const [predictionCards, setPredictionCards] = useState([])
+  const [predictionLoading, setPredictionLoading] = useState(false)
+  const [predictionError, setPredictionError] = useState('')
+  const [predictionUpdatedAt, setPredictionUpdatedAt] = useState(null)
   const [loading, setLoading] = useState(true)
   const [boardError, setBoardError] = useState('')
   const [newsError, setNewsError] = useState('')
@@ -335,6 +184,7 @@ function App() {
   const [newsArticles, setNewsArticles] = useState([])
   const [selectedNewsStoryId, setSelectedNewsStoryId] = useState('')
   const [newsLoading, setNewsLoading] = useState(true)
+  const predictionRequestTime = useRef(0)
   const [authUser, setAuthUser] = useState(() => {
     try {
       return JSON.parse(window.localStorage.getItem('allsport-admin-user') || 'null')
@@ -357,6 +207,52 @@ function App() {
       setNewsLoading(false)
     }
   }
+
+  const refreshPredictions = useCallback(async (force = false) => {
+    const now = Date.now()
+    if (!board.length || (!force && now - predictionRequestTime.current < 5 * 60 * 1000)) return
+
+    const games = board
+      .filter((game) => game.status === 'Live' || game.status === 'Scheduled')
+      .slice(0, 8)
+      .map(({ id, sport, league, status, homeTeam, awayTeam, homeScore, awayScore, homeRecord, awayRecord, startTime }) => ({
+        id,
+        sport,
+        league,
+        status,
+        homeTeam,
+        awayTeam,
+        homeScore,
+        awayScore,
+        homeRecord,
+        awayRecord,
+        startTime,
+      }))
+
+    if (!games.length) {
+      setPredictionCards([])
+      setPredictionError('')
+      return
+    }
+
+    predictionRequestTime.current = now
+    setPredictionLoading(true)
+    setPredictionError('')
+    try {
+      setPredictionCards(await requestAiPredictions(games))
+      setPredictionUpdatedAt(new Date())
+    } catch (error) {
+      setPredictionCards([])
+      setPredictionError(error.message)
+    } finally {
+      setPredictionLoading(false)
+    }
+  }, [board])
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => refreshPredictions(), 0)
+    return () => window.clearTimeout(timeoutId)
+  }, [refreshPredictions])
 
   useEffect(() => {
     if (authUser) {
@@ -446,22 +342,11 @@ function App() {
 
     return sourceBoard.filter((game) => {
       const sportMatches = selectedSport === 'all' || game.sport === selectedSport
-      const marketMatches = selectedMarket === 'all' || game.status === selectedMarket
-      const textMatches = !query || `${game.matchup} ${game.spread} ${game.sport} ${game.league || ''}`.toLowerCase().includes(query)
-      return sportMatches && marketMatches && textMatches
+      const statusMatches = selectedGameStatus === 'all' || game.status === selectedGameStatus
+      const textMatches = !query || `${game.matchup} ${game.sport} ${game.league || ''}`.toLowerCase().includes(query)
+      return sportMatches && statusMatches && textMatches
     })
-  }, [search, selectedMarket, selectedSport, sourceBoard])
-
-  const predictionCards = useMemo(() => {
-    return sourceBoard
-      .filter((game) => game.status === 'Live' || game.status === 'Scheduled')
-      .sort((a, b) => {
-        if (a.status !== b.status) return a.status === 'Live' ? -1 : 1
-        return new Date(a.startTime || 0) - new Date(b.startTime || 0)
-      })
-      .slice(0, 8)
-      .map((item, index) => makePrediction(item, index))
-  }, [sourceBoard])
+  }, [search, selectedGameStatus, selectedSport, sourceBoard])
 
   const topStats = useMemo(() => {
     const allGames = filteredBoard.length ? filteredBoard : sourceBoard
@@ -489,6 +374,8 @@ function App() {
               topStats={topStats}
               predictionCards={predictionCards}
               board={board}
+              predictionLoading={predictionLoading}
+              predictionError={predictionError}
               loading={loading}
               boardError={boardError}
               newsCards={newsArticles.slice(0, 3)}
@@ -507,15 +394,14 @@ function App() {
               setSearch={setSearch}
               selectedSport={selectedSport}
               setSelectedSport={setSelectedSport}
-              selectedMarket={selectedMarket}
-              setSelectedMarket={setSelectedMarket}
+              selectedGameStatus={selectedGameStatus}
+              setSelectedGameStatus={setSelectedGameStatus}
               error={boardError}
               updatedAt={boardUpdatedAt}
             />
           }
         />
-        <Route path="/predictions" element={<PredictionsPage predictionCards={predictionCards} loading={loading} error={boardError} updatedAt={boardUpdatedAt} />} />
-        <Route path="/promos" element={<PromosPage />} />
+        <Route path="/predictions" element={<PredictionsPage predictionCards={predictionCards} loading={loading} predictionLoading={predictionLoading} error={predictionError || boardError} updatedAt={predictionUpdatedAt} onRefresh={() => refreshPredictions(true)} />} />
         <Route path="/news" element={<NewsPage articles={newsArticles} newsLoading={newsLoading} error={newsError} updatedAt={newsUpdatedAt} />} />
         <Route path="/admin-login" element={<AdminLoginPage authUser={authUser} setAuthUser={setAuthUser} />} />
         <Route path="/admin" element={authUser ? <AdminDashboard authUser={authUser} setAuthUser={setAuthUser} onRefreshStories={refreshNews} /> : <Navigate to="/admin-login" replace />} />
@@ -572,7 +458,6 @@ function Header({ authUser }) {
           <NavLink to="/">Home</NavLink>
           <NavLink to="/scores">Scores</NavLink>
           <NavLink to="/predictions">Predictions</NavLink>
-          <NavLink to="/promos">Promos</NavLink>
           <NavLink to="/news">News</NavLink>
         </nav>
 
@@ -595,7 +480,7 @@ function Header({ authUser }) {
   )
 }
 
-function HomePage({ topStats, predictionCards, board, loading, boardError, newsCards, selectedNewsStoryId, setSelectedNewsStoryId }) {
+function HomePage({ topStats, predictionCards, predictionLoading, predictionError, board, loading, boardError, newsCards, selectedNewsStoryId, setSelectedNewsStoryId }) {
   const activeStory = newsCards.find((story) => story.id === selectedNewsStoryId) || newsCards[0]
   const featuredGames = board.filter((game) => game.status === 'Live').slice(0, 2)
 
@@ -604,14 +489,14 @@ function HomePage({ topStats, predictionCards, board, loading, boardError, newsC
       <section className="hero-section">
         <div className="container hero-grid">
           <div className="hero-copy">
-            <span className="eyebrow">Data-driven betting</span>
-            <h1>Live scores, sharper picks, and real-time market movement.</h1>
+            <span className="eyebrow">AI sports analysis</span>
+            <h1>Live scores, AI match predictions, and the latest sports news.</h1>
             <p>
-              Monitor current matchups, projected outcomes, and betting value across the NBA, NFL, MLB, and top soccer leagues worldwide.
+              Explore AI-generated match outcome probabilities, live scores, and current headlines across the NBA, NFL, MLB, and major soccer leagues.
             </p>
             <div className="cta-row">
-              <NavLink to="/scores" className="btn btn-primary">View live board</NavLink>
-              <NavLink to="/predictions" className="btn btn-secondary">Explore picks</NavLink>
+              <NavLink to="/scores" className="btn btn-primary">View live scores</NavLink>
+              <NavLink to="/predictions" className="btn btn-secondary">Explore predictions</NavLink>
             </div>
 
             <div className="stats-grid">
@@ -631,29 +516,29 @@ function HomePage({ topStats, predictionCards, board, loading, boardError, newsC
             </div>
 
             {featuredGames.length ? featuredGames.map((game) => (
-              <div className="market-card" key={game.id}>
-                <div className="market-topline">
+              <div className="score-card" key={game.id}>
+                <div className="score-topline">
                   <span>{game.league || game.sport} · {game.statusDetail || 'Live'}</span>
                   <span className="trend-pill">{game.awayScore} - {game.homeScore}</span>
                 </div>
-                <div className="market-row">
+                <div className="score-row">
                   <div>
                     <strong>{game.awayTeam}</strong>
                     <small>{game.awayRecord}</small>
                   </div>
-                  <div className="price">{game.awayScore}</div>
+                  <div className="score-value">{game.awayScore}</div>
                 </div>
-                <div className="market-row">
+                <div className="score-row">
                   <div>
                     <strong>{game.homeTeam}</strong>
                     <small>{game.homeRecord}</small>
                   </div>
-                  <div className="price">{game.homeScore}</div>
+                  <div className="score-value">{game.homeScore}</div>
                 </div>
               </div>
             )) : (
-              <div className="market-card">
-                <div className="market-row">
+              <div className="score-card">
+                <div className="score-row">
                   <strong>{loading ? 'Loading live scores…' : boardError || 'No games are live right now.'}</strong>
                 </div>
               </div>
@@ -667,7 +552,7 @@ function HomePage({ topStats, predictionCards, board, loading, boardError, newsC
           <div className="section-heading">
             <div>
               <span className="eyebrow dark">Predictions</span>
-              <h2>Live-data estimates</h2>
+              <h2>AI match predictions</h2>
             </div>
           </div>
           <div className="prediction-grid">
@@ -675,17 +560,17 @@ function HomePage({ topStats, predictionCards, board, loading, boardError, newsC
               <article key={pick.id} className="prediction-card">
                 <span className="tag-pill">{pick.tag}</span>
                 <h3>{pick.title}</h3>
-                <p>{pick.detail}</p>
+                <p>AI predicts {pick.predictedWinner} to win ({pick.winProbability}% estimated chance).</p>
                 <div className="prediction-meta">
                   <span>{pick.league ? `${pick.sport} · ${pick.league}` : pick.sport}</span>
-                  <span>{pick.odds}</span>
+                  <span>{pick.score}</span>
                 </div>
                 <div className="prediction-meta secondary-meta">
-                  <span>Confidence</span>
-                  <span>{pick.confidence}</span>
+                  <span>AI analysis</span>
+                  <span>Estimated</span>
                 </div>
               </article>
-            )) : <p className="empty-state">{loading ? 'Loading current games…' : 'No upcoming or live games are available from ESPN.'}</p>}
+            )) : <p className="empty-state">{predictionLoading || loading ? 'Preparing AI analysis for current games…' : predictionError || 'No upcoming or live games are available from ESPN.'}</p>}
           </div>
         </div>
       </section>
@@ -744,7 +629,7 @@ function HomePage({ topStats, predictionCards, board, loading, boardError, newsC
   )
 }
 
-function ScoreboardPage({ board, loading, search, setSearch, selectedSport, setSelectedSport, selectedMarket, setSelectedMarket, error, updatedAt }) {
+function ScoreboardPage({ board, loading, search, setSearch, selectedSport, setSelectedSport, selectedGameStatus, setSelectedGameStatus, error, updatedAt }) {
   return (
     <main>
       <section className="dashboard-section">
@@ -752,7 +637,7 @@ function ScoreboardPage({ board, loading, search, setSearch, selectedSport, setS
           <div className="section-heading">
             <div>
               <span className="eyebrow dark">Dashboard</span>
-              <h2>Betting board</h2>
+              <h2>Live scores</h2>
             </div>
             <span className="status-pill">
               ESPN · refreshes every 30s{updatedAt ? ` · updated ${updatedAt.toLocaleTimeString()}` : ''}
@@ -774,11 +659,11 @@ function ScoreboardPage({ board, loading, search, setSearch, selectedSport, setS
               ))}
             </div>
 
-            <div className="market-filters">
-              <button type="button" className={`chip-button ${selectedMarket === 'all' ? 'active' : ''}`} onClick={() => setSelectedMarket('all')}>All</button>
-              <button type="button" className={`chip-button ${selectedMarket === 'Live' ? 'active' : ''}`} onClick={() => setSelectedMarket('Live')}>Live</button>
-              <button type="button" className={`chip-button ${selectedMarket === 'Final' ? 'active' : ''}`} onClick={() => setSelectedMarket('Final')}>Final</button>
-              <button type="button" className={`chip-button ${selectedMarket === 'Scheduled' ? 'active' : ''}`} onClick={() => setSelectedMarket('Scheduled')}>Scheduled</button>
+            <div className="status-filters">
+              <button type="button" className={`chip-button ${selectedGameStatus === 'all' ? 'active' : ''}`} onClick={() => setSelectedGameStatus('all')}>All</button>
+              <button type="button" className={`chip-button ${selectedGameStatus === 'Live' ? 'active' : ''}`} onClick={() => setSelectedGameStatus('Live')}>Live</button>
+              <button type="button" className={`chip-button ${selectedGameStatus === 'Final' ? 'active' : ''}`} onClick={() => setSelectedGameStatus('Final')}>Final</button>
+              <button type="button" className={`chip-button ${selectedGameStatus === 'Scheduled' ? 'active' : ''}`} onClick={() => setSelectedGameStatus('Scheduled')}>Scheduled</button>
             </div>
 
             <label className="search-field">
@@ -787,7 +672,7 @@ function ScoreboardPage({ board, loading, search, setSearch, selectedSport, setS
                 type="search"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search teams or odds"
+                placeholder="Search teams or leagues"
               />
             </label>
           </div>
@@ -803,8 +688,6 @@ function ScoreboardPage({ board, loading, search, setSearch, selectedSport, setS
                     <th>League</th>
                     <th>Status</th>
                     <th>Score</th>
-                    <th>Spread</th>
-                    <th>Total</th>
                     <th>Game details</th>
                   </tr>
                 </thead>
@@ -824,14 +707,12 @@ function ScoreboardPage({ board, loading, search, setSearch, selectedSport, setS
                           <span className={`status-tag ${game.status.toLowerCase()}`}>{game.status}</span>
                         </td>
                         <td>{game.status === 'Scheduled' ? '—' : `${game.awayScore} - ${game.homeScore}`}</td>
-                        <td>{game.spread || '—'}</td>
-                        <td>{game.total || '—'}</td>
                         <td>{game.statusDetail || (game.startTime ? new Date(game.startTime).toLocaleString() : '—')}</td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="7" className="empty-state">No games match the current filters.</td>
+                      <td colSpan="5" className="empty-state">No games match the current filters.</td>
                     </tr>
                   )}
                 </tbody>
@@ -844,7 +725,7 @@ function ScoreboardPage({ board, loading, search, setSearch, selectedSport, setS
   )
 }
 
-function PredictionsPage({ predictionCards, loading, error, updatedAt }) {
+function PredictionsPage({ predictionCards, loading, predictionLoading, error, updatedAt, onRefresh }) {
   const [expandedId, setExpandedId] = useState(predictionCards[0]?.id ?? '')
 
   useEffect(() => {
@@ -860,14 +741,20 @@ function PredictionsPage({ predictionCards, loading, error, updatedAt }) {
           <div className="section-heading">
             <div>
               <span className="eyebrow dark">Predictions</span>
-              <h2>Live-data estimates</h2>
+              <h2>AI match predictions</h2>
             </div>
-            <span className="status-pill">
-              ESPN · refreshes every 30s{updatedAt ? ` · updated ${updatedAt.toLocaleTimeString()}` : ''}
-            </span>
+            <div className="prediction-actions">
+              <span className="status-pill">
+                AI updates every 5 min{updatedAt ? ` · updated ${updatedAt.toLocaleTimeString()}` : ''}
+              </span>
+              <button type="button" className="btn btn-secondary" onClick={onRefresh} disabled={predictionLoading || loading}>
+                {predictionLoading ? 'Analyzing…' : 'Refresh AI predictions'}
+              </button>
+            </div>
           </div>
-          <p className="detail-summary">Estimates use current team records and, for live games, the current score. They are not betting advice or sportsbook odds.</p>
+          <p className="detail-summary">AI analyzes ESPN matchup status, current scores, and available season records. It does not access injury reports or other live context, and its probability estimates are not guarantees.</p>
           {error ? <p className="auth-error">{error}</p> : null}
+          {!error && predictionCards.length && updatedAt ? <p className="detail-meta">AI analysis generated {updatedAt.toLocaleTimeString()}.</p> : null}
 
           <div className="prediction-list">
             {predictionCards.length ? predictionCards.map((pick) => {
@@ -888,9 +775,9 @@ function PredictionsPage({ predictionCards, loading, error, updatedAt }) {
                       </div>
 
                       <div className="prediction-meta-row">
-                        <span>{pick.odds}</span>
-                        <span>{pick.tag === 'Live estimate' ? 'Live score' : 'Scheduled'}: {pick.projectedScore || '—'}</span>
-                        <span>{pick.confidence}</span>
+                        <span>Predicted winner: {pick.predictedWinner}</span>
+                        <span>{pick.tag === 'Live match' ? 'Live score' : 'Start'}: {pick.score}</span>
+                        <span>{pick.winProbability}% estimated win chance</span>
                       </div>
                     </div>
                   </button>
@@ -899,70 +786,15 @@ function PredictionsPage({ predictionCards, loading, error, updatedAt }) {
                     <div className="prediction-detail">
                       <p>{pick.detail}</p>
                       <div className="prediction-reason-box">
-                        <strong>Why this pick?</strong>
+                        <strong>AI analysis</strong>
                         <p>{pick.reason}</p>
                       </div>
                     </div>
                   ) : null}
                 </article>
               )
-            }) : <div className="empty-state">{loading ? 'Loading live games…' : 'No upcoming or live games are currently available from ESPN.'}</div>}
+            }) : <div className="empty-state">{predictionLoading || loading ? 'Preparing AI analysis for current games…' : error || 'No upcoming or live games are currently available from ESPN.'}</div>}
           </div>
-        </div>
-      </section>
-    </main>
-  )
-}
-
-function PromosPage() {
-  return (
-    <main className="promo-page">
-      <section className="container promo-hero">
-        <div className="promo-hero-copy">
-          <span className="eyebrow dark">Exclusive offers</span>
-          <h1>Sportsbook promo codes and welcome bonuses.</h1>
-          <p>Compare the best legal sportsbook promos, bonus codes, and signup offers across top betting apps.</p>
-        </div>
-
-        <div className="promo-hero-card">
-          <span className="promo-hero-label">Featured deal</span>
-          <strong>Bet $5, Get $150</strong>
-          <p>Use code <span>ALLSPORT150</span> to unlock a fast-start sportsbook bonus.</p>
-        </div>
-      </section>
-
-      <section className="container promo-grid-section">
-        <div className="promo-filters">
-          <button type="button" className="chip-button active">All promos</button>
-          <button type="button" className="chip-button">NBA</button>
-          <button type="button" className="chip-button">NFL</button>
-          <button type="button" className="chip-button">MLB</button>
-        </div>
-
-        <div className="promo-grid">
-          {promoOffers.map((offer) => (
-            <article key={offer.id} className="promo-card">
-              <div className="promo-card-header">
-                <span className="promo-tag">{offer.tag}</span>
-                <span className="promo-brand">{offer.brand}</span>
-              </div>
-
-              <h3>{offer.title}</h3>
-              <p>{offer.detail}</p>
-
-              <div className="promo-meta">
-                <span>{offer.sport}</span>
-                <span>{offer.expiry}</span>
-              </div>
-
-              <div className="promo-code-row">
-                <span>Code</span>
-                <strong>{offer.code}</strong>
-              </div>
-
-              <button type="button" className="btn btn-primary promo-button">Claim offer</button>
-            </article>
-          ))}
         </div>
       </section>
     </main>
@@ -986,6 +818,14 @@ function NewsPage({ articles, newsLoading, error, updatedAt }) {
   }, [filteredArticles, selectedStoryId])
 
   const activeStory = filteredArticles.find((story) => story.id === selectedStoryId) || filteredArticles[0]
+  const trendingSports = useMemo(() => {
+    const counts = articles.reduce((result, article) => {
+      result.set(article.sport, (result.get(article.sport) || 0) + 1)
+      return result
+    }, new Map())
+
+    return [...counts].sort((a, b) => b[1] - a[1]).slice(0, 3)
+  }, [articles])
 
   return (
     <main className="news-page-shell">
@@ -994,7 +834,17 @@ function NewsPage({ articles, newsLoading, error, updatedAt }) {
           <div className="section-heading compact-heading">
             <div>
               <span className="eyebrow dark">Newsroom</span>
-              <h2>Latest stories</h2>
+              <h2>Current sports news</h2>
+            </div>
+          </div>
+
+          <div className="trending-topics">
+            <strong>Trending sports</strong>
+            <span>Most represented in current ESPN headlines</span>
+            <div className="trending-topic-list">
+              {trendingSports.map(([sport, count]) => (
+                <span className="trending-topic" key={sport}>{sport} · {count} {count === 1 ? 'story' : 'stories'}</span>
+              ))}
             </div>
           </div>
 
@@ -1199,12 +1049,12 @@ function AdminDashboard({ authUser, setAuthUser, onRefreshStories }) {
       sport: 'NBA',
       category: 'Analysis',
       title: 'New feature story',
-      summary: 'Write a fresh sportsbook angle for the latest market movement.',
+      summary: 'Write a clear, fact-checked analysis of the latest team news and match developments.',
       author: authUser.name,
       readTime: '4 min read',
       image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=1200&q=80',
       status: 'Draft',
-      content: ['Draft a fresh market narrative and shape the angle before publishing.'],
+      content: ['Draft a factual sports story, verify the details, and explain the context for readers.'],
       source: 'AllSport Desk',
     }
 
