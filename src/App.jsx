@@ -402,6 +402,7 @@ function App() {
           }
         />
         <Route path="/predictions" element={<PredictionsPage predictionCards={predictionCards} loading={loading} predictionLoading={predictionLoading} error={predictionError || boardError} updatedAt={predictionUpdatedAt} onRefresh={() => refreshPredictions(true)} />} />
+        <Route path="/promos" element={<PromosPage />} />
         <Route path="/news" element={<NewsPage articles={newsArticles} newsLoading={newsLoading} error={newsError} updatedAt={newsUpdatedAt} />} />
         <Route path="/admin-login" element={<AdminLoginPage authUser={authUser} setAuthUser={setAuthUser} />} />
         <Route path="/admin" element={authUser ? <AdminDashboard authUser={authUser} setAuthUser={setAuthUser} onRefreshStories={refreshNews} /> : <Navigate to="/admin-login" replace />} />
@@ -458,6 +459,7 @@ function Header({ authUser }) {
           <NavLink to="/">Home</NavLink>
           <NavLink to="/scores">Scores</NavLink>
           <NavLink to="/predictions">Predictions</NavLink>
+          <NavLink to="/promos">Promos</NavLink>
           <NavLink to="/news">News</NavLink>
         </nav>
 
@@ -797,6 +799,35 @@ function PredictionsPage({ predictionCards, loading, predictionLoading, error, u
           </div>
         </div>
       </section>
+    </main>
+  )
+}
+
+function PromosPage() {
+  return (
+    <main className="promos-page">
+      <section className="container promos-hero">
+        <span className="eyebrow dark">Sportsbook partners</span>
+        <h1>Offers, explained clearly.</h1>
+        <p>We’re preparing a place to compare sportsbook promotions and partner offers, with eligibility, location restrictions, and terms clearly explained.</p>
+        <aside className="affiliate-disclosure">
+          <strong>Affiliate disclosure</strong>
+          <p>AllSport may earn a commission if you sign up through a partner link. This does not affect our AI match analysis or sports news coverage.</p>
+        </aside>
+      </section>
+
+      <section className="container promos-status">
+        <div className="promos-status-mark" aria-hidden="true">A</div>
+        <div>
+          <span className="eyebrow">Coming soon</span>
+          <h2>No partner offers are listed yet.</h2>
+          <p>We’ll publish offers only after a partnership is confirmed and the promotion details, terms, and destination link have been checked.</p>
+        </div>
+      </section>
+
+      <p className="container promos-responsibility">
+        Offers may be restricted by age and location. Availability and terms vary. Please make informed choices.
+      </p>
     </main>
   )
 }

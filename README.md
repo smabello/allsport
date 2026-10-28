@@ -7,9 +7,11 @@ AllSport provides live sports scores, AI-generated match outcome estimates, and 
 - ESPN scoreboards for the NBA, NFL, MLB, and selected soccer leagues, refreshed every 30 seconds.
 - AI predictions for up to eight live or scheduled games, refreshed every five minutes. The model receives only the matchup, game status, current score, start time, and available season records.
 - ESPN sports headlines, refreshed every two minutes. “Trending sports” is based on how often each sport appears in the current headline feed, not audience views or a popularity metric.
+- An affiliate-promotions page with a clear disclosure. Offers remain unpublished until partner links and terms are confirmed.
 - Editorial tools for staff to manage news stories.
 
 AI estimates are not guarantees. They use limited scoreboard data and do not include injury reports or other live context.
+Partner links may earn AllSport a commission and do not affect match analysis or news coverage.
 
 ## Run locally
 

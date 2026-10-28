@@ -620,6 +620,92 @@ tbody tr:last-child td {
   gap: 20px;
 }
 
+.promos-page {
+  padding: clamp(32px, 6vw, 72px) 0 56px;
+}
+
+.promos-hero {
+  max-width: 860px;
+}
+
+.promos-hero h1 {
+  margin: 20px 0 14px;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.promos-hero > p {
+  max-width: 680px;
+  margin-bottom: 24px;
+  color: #a9bdc9;
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+.affiliate-disclosure {
+  max-width: 700px;
+  padding: 18px 20px;
+  border: 1px solid rgba(104, 227, 176, 0.18);
+  border-radius: 16px;
+  background: rgba(104, 227, 176, 0.05);
+}
+
+.affiliate-disclosure strong {
+  color: #7fe8bf;
+}
+
+.affiliate-disclosure p {
+  margin: 6px 0 0;
+  color: #c4d5df;
+  line-height: 1.65;
+}
+
+.promos-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-top: 40px;
+  padding: clamp(20px, 4vw, 34px);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(12, 23, 31, 0.7);
+}
+
+.promos-status-mark {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #68e3b0, #b8ffe0);
+  color: #072520;
+  font-weight: 800;
+}
+
+.promos-status h2 {
+  margin: 14px 0 8px;
+  font-size: clamp(1.35rem, 3vw, 1.9rem);
+  letter-spacing: -0.04em;
+}
+
+.promos-status p,
+.promos-responsibility {
+  color: #a9bdc9;
+  line-height: 1.7;
+}
+
+.promos-status p {
+  max-width: 680px;
+  margin: 0;
+}
+
+.promos-responsibility {
+  margin-top: 16px;
+  font-size: 0.84rem;
+}
+
 .prediction-actions {
   display: flex;
   align-items: center;
